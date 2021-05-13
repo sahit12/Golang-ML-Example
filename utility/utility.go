@@ -15,10 +15,6 @@ type Settings struct {
 	PlotType string
 }
 
-func ISNAN(val float64) bool {
-	return math.IsNaN(val)
-}
-
 func (s *Settings) CleanAndLoad() dataframe.DataFrame {
 	log.Println("Cleaning Started")
 
@@ -36,7 +32,10 @@ func (s *Settings) CleanAndLoad() dataframe.DataFrame {
 	return DF
 }
 
-func (s *Settings) GetColumnData(df dataframe.DataFrame, colname string, XYname string) (*plotter.Values, *plotter.XYs) {
+func (s *Settings) GetColumnData(
+	df dataframe.DataFrame,
+	colname string,
+	XYname string) (*plotter.Values, *plotter.XYs) {
 
 	// Create a plotter.Values value and fill it with the
 	// values from the required column of the dataframe.
@@ -54,13 +53,13 @@ func (s *Settings) GetColumnData(df dataframe.DataFrame, colname string, XYname 
 		}
 		return &plotvalues, nil
 	case "scatter":
-		x := df.Col(XYname).Float()
+		y := df.Col(XYname).Float()
 		points := make(plotter.XYs, df.Nrow())
 
 		for i, value := range df.Col(colname).Float() {
-			if !math.IsNaN(value) && !math.IsNaN(x[i]) {
-				points[i].Y = value
-				points[i].X = x[i]
+			if !math.IsNaN(value) && !math.IsNaN(y[i]) {
+				points[i].X = value
+				points[i].Y = y[i]
 			} else {
 				log.Printf("Handling data at the value %v", i)
 				continue

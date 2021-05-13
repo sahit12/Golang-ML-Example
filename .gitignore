@@ -1,5 +1,4 @@
 # Ignore datasets
 Datasets/archive/arxiv-metadata-oai-snapshot.json
-Datasets/car_data/car_data.csv
-Datasets/car_dataCAR DETAILS FROM CAR DEKHO.csv
+Datasets/car_data/*
 Datasets/crop_production.csv

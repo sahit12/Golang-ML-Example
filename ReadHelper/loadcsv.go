@@ -21,7 +21,7 @@ func LoadCSV(filename string) [][]string {
 
 	// In case we are not aware of the number
 	// of fields per row, we can use below function
-	reader.FieldsPerRecord = -1
+	reader.FieldsPerRecord = 0
 
 	// Read all csv records
 	rawcsvdata, err := reader.ReadAll()

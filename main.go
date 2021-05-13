@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Golang-ML-Example/ml"
 	"Golang-ML-Example/utility"
 	"fmt"
 	"log"
@@ -15,19 +16,17 @@ func main() {
 	// Initialize the utility settings
 
 	s := &utility.Settings{
-		Columns:  []string{"selling_price", "km_driven", "seats"},
-		DataFile: "Datasets/car_data/Car details v3.csv",
+		Columns:  []string{"Weight", "Vertical_len", "Diagonal_len", "Cross_len", "Height", "Width"},
+		DataFile: "datasets/Fish.csv",
 		PlotType: "scatter",
 	}
 
 	// Load data from file
 	DF := s.CleanAndLoad()
-	// fmt.Println(DF.Describe())
 
 	// Load Plotting data
 	for _, name := range s.Columns {
-		pltv, pltxy := s.GetColumnData(DF, name, "selling_price")
-		// fmt.Println(pltxy)
+		pltv, pltxy := s.GetColumnData(DF, name, "Weight")
 
 		p := plot.New()
 
@@ -47,14 +46,14 @@ func main() {
 
 			// Add the histogram to the plot.
 			p.Add(h)
-			err = p.Save(200, 200, "Images/"+name+"_histogram.png")
+			err = p.Save(200, 200, "images/"+name+"_histogram.png")
 			if err != nil {
 				log.Panic(err)
 			}
 
 		case "scatter":
-			p.X.Label.Text = "Selling Price"
-			p.Y.Label.Text = name
+			p.X.Label.Text = name
+			p.Y.Label.Text = "Weight"
 
 			p.Add(plotter.NewGrid())
 			s, err := plotter.NewScatter(pltxy)
@@ -66,10 +65,19 @@ func main() {
 
 			// Save the plot to a PNG file.
 			p.Add(s)
-			err = p.Save(4*vg.Inch, 4*vg.Inch, "Images/"+name+"_scatter.png")
+			err = p.Save(4*vg.Inch, 4*vg.Inch, "images/"+name+"_scatter.png")
 			if err != nil {
 				log.Fatalf("Error while saving image:: %v", err)
 			}
 		}
 	}
+
+	// Create training and test data
+	utility.TrainTestSplit(DF, true)
+
+	// Train and get value
+	rval := ml.TrainRegression("Selling Price", "seats", 0, "datasets/Fish.csv")
+	// Output the trained model parameters.
+	fmt.Printf("\nRegression Formula:\n%v\n\n", rval.Formula)
+
 }
